@@ -1,0 +1,1302 @@
+---
+title: "PSYCH5020-Bartlett: Homework 03"
+author: "2768272Z"
+date: "`r Sys.Date()`"
+output: 
+  bookdown::html_document2:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    number_sections: false
+bibliography: refs.bib
+csl: apa.csl
+---
+
+```{r settings, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE) # Prompt to make sure you're including your code
+```
+
+```{r Packages, warning=FALSE, message=FALSE}
+# In questions 2 and 3, you will need to load relevant R packages 
+# tidyverse is loaded here to support loading the data provided to you
+# add any relevant packages for how you approach the problems in questions 2 and 3
+# warning and message set to false so the knitted document isn't full of loading messages
+
+library(brms) # fitting Bayesian models
+library(bayestestR) # helper functions for plotting and understanding the models
+library(tidybayes) # helper functions for combining plotting and tidy data from models
+library(see) # helper functions for plotting objects from bayestestR
+library(emmeans) # Handy function for calculating (marginal) effect sizes
+library(patchwork) # Combine multiple plots
+library(tidyverse)
+
+```
+
+All the model and data that I use are avaliable at https://github.com/JennyZeng899/Homework3.git. Feel free to check and reproduce. 
+
+# Question 1: Bayesian statistics in psychology research
+
+In the first part of lecture 9, we saw how more research in psychology is using Bayesian statistics. However, they are still in the minority and people can still misinterpret the information they provide. 
+
+We would like you to find an empirical psychology article in your favourite area of research that uses Bayesian statistics to make inferences. It must be an empirical article addressing a research question, not a review, tutorial, or methods development article. After reading your article, please use the structure below to answer some questions evaluating their use of Bayesian statistics.
+
+## Reference
+
+What is the full APA reference for your chosen article? 
+
+Ghaderi-Kangavari, A., Parand, K., Ebrahimpour, R., Nunez, M. D., & Rad, J. A. [-@ghaderi2021spatial]. How spatial attention affects the decision process: Looking through the lens of bayesian hierarchical diffusion model & EEG analysis. bioRxiv, 2021–2005.
+
+## Overview
+
+Please provide an overview of the authors' primary research question and hypothesis, and how they used Bayesian statistics to address these. What were their main findings? Did the authors report Bayes factors or a modelling approach? Did they solely rely on Bayesian statistics or did they also report frequentist statistics? Did they explain why they used Bayesian statistics over frequentist statistics? 
+
+The authors' primary research question was to investigate whether two EEG biomarkers, the lateralized alpha frequency band at parieto-occipital sites and N2 subcomponents (the contralateral-neutral (contralateral minus neutral difference curve) and ipsilateral-neutral (ipsilateral minus neutral difference curve)) at central sites, could modulate behavioral performance and spatial prioritization in a visual perceptual decision-making task with spatial cueing manipulations.
+
+They hypothesize that electrophysiological correlates of top-down spatial prioritization (alpha band lateralization and N2 subcomponents) during a visual perceptual decision making task could predict visual performance and the non-decision time parameter of DDMs, reflecting the sensory coding time and response expectation.They claims that the cognitive process of spatial attention is encoded by lateralized alpha power in and around parieto-occipital electrode sites, and that spatial attention is also encoded by lateralized N2cc amplitudes in central electrode sites.
+
+The process of spatial prioritization in perceptual decision-making can not be observed directly. It is modeled by a well-established sequential sampling model, known as the drift-diffusion model (DDM) which involved different parameters: the drift rate, the boundary separation, and the non-decision time.
+
+In order to find the best fit model for spatial prioritization, researcher first used a hierarchical Bayesian estimation approach to explore the latent cognitive processes underlying perceptual decisions during spatial prioritization, and to link those latent cognitive processes to neural mechanisms. 
+
+To do this, researcher assumed that individual participants' parameters (i.e. values that describe their decision-making process) were randomly drawn from a group-level distribution. and then used a hierarchical Bayesian approach to estimate the distribution of these parameters simultaneously at both the group and individual levels for each model. This  allowed them to combine hierarchical approach with the diffusion model to more accurately estimate parameters such as drift rate, boundary separation, and non-decision time at both the group and individual levels. The posterior distributions of the model parameters at the individual and group level is generate via Markov-chain Monte Carlo sampling (MCMC).
+
+Researcher conduct five different models and compared the performance of these five models to see which model best fit the data. 
+
++ The first model, called modelp, assumes that the spatial cues (directional arrows) have no effect on the resources or decision parameters used in the task. In this model, only the drift rate parameter depends on the coherence and stimulus (face or house).
+
++ The second model, modelv, assumes that the spatial cues regulate the rate of accumulated evidence (the drift rate v).
+
++ The third model, modelt, assumes that the non-decision time (Ter) varies with spatial cueing.
+
++ The fourth model, modelz, assumes that spatial cueing manipulates the mean bias (starting point z).
+
++ The fifth model, modela, assumes that spatial cueing shifts the decision boundary (a).
+
+Overall, these five models allowed the researchers to test different hypotheses about how spatial attention affects decision-making during spatial prioritization. R-squared (R2) and the deviance information criterion (DIC) of each model were used to evaluate each model’s goodness-of-fit. They found that modelt, one of the five models, provided the best fit to the data and had the smallest DIC and largest R2. The researchers used the results of modelt to identify the electrophysiological mechanisms of informative (contralateral and ipsilateral) and uninformative (neutral) prioritization under decision-making.
+
+After this we can finally investigate the relationship between electrophysiological correlates and spatial prioritization in perceptual decision-making, as well as behavioral performance. The analysis used multiple regression models with two pairs of explanatory variables ({N2nc, Anc}, and {N2ni, Ani}) to predict spatial prioritization and behavioral performance (RT and accuracy). The dependent variable (y) was either a direct estimate of behavioral performance or an estimated non-decision time parameter from the best fitting DDM (modelt) per participant. Separate multiple regression models were applied for prioritization minus non-prioritization conditions, resulting in six multiple regression models being run. 
+
+Bayes factor (BF) was calculated for each model, which quantifies the relative evidence for one model over another model, with BF10 indicating the probability in favor of the alternative model over the null model. R2 was used as a goodness-of-fit statistic, which summarizes the relationship between the observed and predicted values for each linear model.
+
+They found that the mean response times were predicted by the N2nc and Anc components, with the N2nc component having a significant correlation with mean RT. The main effect of Anc was highly significant and the main effect of N2nc was not significant. 
+
+Non-decision time differences were also explained by the N2nc and Anc components.The main effect of N2nc was significant, and the main effect of Anc was not significant.
+However, accuracy was not predicted by either component.There were no significant models for the regressions with ipsilateral versus neutral regressors.
+
+As mentioned earlier, the researchers in this study reported the Bayes factors and the modelling process for both the cognitive modelling and the multiple regression model, providing clear explanations for their methodology. Although they used ANOVA to analyse the behavioural results, they relied solely on Bayesian statistics to test their hypotheses. 
+
+While the researchers provided an explanation for using Bayesian statistics in the cognitive model, they did not offer a justification for why using it in multiple regression model.
+
+## Evaluation 
+
+Bayesian statistics are often presented as a silver bullet to fix all the problems associated with frequentist statistics. However, they can still be misused and misinterpreted. Considering the reporting guidelines and common misconceptions we covered in the lectures, please critically evaluate your chosen article's use and interpretation of Bayesian statistics. Remember critical evaluation can include both positives and negatives.  
+
+The paper could be improved in terms of clarity and coherence. Some sections, such as the introduction of the cognitive modeling, lack sufficient explanation and are not fully contextualized until later in the results section. 
+
+Talk back to the evaluation of Bayesian Statistics, the floowing evaluation will seperate in two parts, the first part that evaluate cognitive modelling and the second part evaluate the multiple regression modeling. The evaluation process is follow the BARG steps from John K. Kruschke [-@kruschke2021bayesian].
+
+
+#### Preamble
+
++ cognitive modelling: Researcher clearly stated that *a Bayesian hierarchical approach is considered, which allows inferences to be performed simultaneously on the group and individual level.* in the abstract explain why they intersted in using Bayesian approach. They also clearly stated the aim of the analysis is to explore the latent cognitive processes underlying perceptual decisions during spatial prioritization, and to link those latent cognitive processes to neural mechanisms. This provide reader an better insight into why researcher aiming to use Bayesian approach. 
+
++ multiple regression modeling: The researcher's explanation for the use of Bayesian tests in their explanation was unclear and lacking in detail. The calculation of the Bayes factor (BF) appeared sudden and confusing.
+
+#### Step 1. Explain the model
+
+in this part of evaluation we need to check the data variables, likelihood function and parameter, prior distribution, formal specification and prior predictive check. 
+
++ cognitive modelling: this research paper only specific the formal (X(t+∆t) = X(t) +v·∆t +e·√∆t,) they aim to use and no other information provide. Furthermore, the formula is located in the introduction, which can be confusing for readers as it may appear to be the model for the hypothesis. Additionally, the experimental procedure has not been mentioned yet, which makes this part even more difficult to understand.
+
+Although the researcher does spend time explaining what each parameter means in the equation, the explanation may not make sense until the reader finishes reading the behavioral experiment design section. Therefore, the researcher should have considered the structure of the article more carefully and how the information may be presented in a more understandable way for readers.
+
++ multiple regression modeling: The model equation y = β0 + β1X1 + β2X2 + ε is helpful for understanding the modeling process, but the absence of information about the prior and likelihood function can leave readers wondering. Providing more context on the prior distribution and likelihood function used in the model would help readers better understand the modeling process and the basis for the posterior distribution. It would be beneficial if the researcher provided a clear explanation of the Bayesian approach they used, including the prior distribution and likelihood function, to help readers understand how the model was constructed and the assumptions underlying it.
+
+#### step 2. report details of the computation
+
++ cognitive modelling: The researcher made a commendable effort in describing the modeling process by mentioning the use of the HDDM package in Python. They were able to generate the full posterior distributions of the model parameters at both the individual and group level by employing Markov-chain Monte Carlo sampling (MCMC). The sampling progress can be observed from the converged chains provided for each model. However, it would have been more informative if the researcher had reported the effective sample size (ESS) of the chains to allow readers to assess the resolution of the chains.
+
++ multiple regression modeling: The researchers introduced their use of the BayesFactor package in R and calculated BF10, which was reported with a clear subscript. But they haven't clearly state the statistical hypothesis they interest to test.
+
+#### step 3. Describe the posterior distribution
+
++ cognitive modelling: This paper includes a posterior predictive check which compares the posterior distribution to the original dataset. The authors also plot the posterior distribution and include the 95% highest posterior density (HPD). While this is a valuable contribution to the analysis, the authors do not provide a summary of their findings or any accompanying text to interpret the results. Adding a brief interpretation of the results would greatly enhance the reader's understanding of the paper.
+
++ multiple regression modeling: While the researchers reported a clear Bayes Factor (BF) with a subscript, they did not provide posterior probabilities of models for a range of prior model probabilities. As the prior was not mentioned in the beginning, this information would be helpful in understanding the robustness of their findings to different prior assumptions.
+
+#### STEP 4. Report decision and their criteria
+
++ cognitive modelling: The researchers presented a clear table comparing the DIC and R square values for each model, which is a crucial step in deciding which model performs better. They also provided instructions on how to interpret the results, stating that a lower DIC score is preferred, while an R square value closer to one indicates a better fit. 
+
++ multiple regression modeling: The researcher also provided a clear instruction on how to decide which hypothesis is better supported based on the Bayes Factor. However, they did not state or justify the decision threshold for the posterior model probability for both models. Additionally, there was no information on the minimum prior model probability that would make the posterior model probability exceed the decision threshold. These details are important for readers to understand how the researcher reached their conclusions and how confident they are in their findings.
+
+#### Step 5. Report sensitivity analysis
+
+We will discuss both models together in the last two steps since the issue is the same for both models - no information about the prior at all. Therefore, there is no way to check the model sensitivity to different priors. The paper also lacks posterior model probabilities for a range of prior model probabilities for both model comparison and hypothesis testing. This information is important for understanding the robustness of the results and the degree of support for the hypotheses. Without this information, the conclusions of the study may be less convincing, and it is difficult to determine the practical significance of the findings. It is essential for researchers to report the prior information and sensitivity analyses to provide readers with a more comprehensive understanding of the results.
+
+#### Step 6. Make it reproducible
+
+The researchers in this paper provided information about the software and packages used and also shared the code and simulation scripts for all current models (https://github.com/AGhaderi/hDDM_attention).  
+
+However, the paper is a bit messy and hard to follow, and they did not provide version information about the software they used. While the reproducibility seems to be adequate, there are still several missing pieces of information, particularly related to Bayesian testing and estimation. Additional information about the prior could help readers better understand the paper. In conclusion, while there are some positive aspects of the paper, there is also room for improvement in terms of clarity and completeness.
+
+# Question 2: Evans (2022) registered replication report
+
+[Evans (2022)](https://psyarxiv.com/a2rj9/) organised a registered replication report of an influential study in the field of occupational psychology titled: *Unethical Behaviour in the Workplace: A Direct and Conceptual Replication of Jones & Kavanagh (1996)*. You can find the original [Jones and Kananagh (1996) by following this link](https://link.springer.com/article/10.1007/BF00381927) or searching in the library. This data set is part of the larger registered report but was collected from University of Glasgow students.
+
+To briefly describe the study, participants are shown a vignette describing a fake company. There are several paragraphs describing the company, what it is like to work at the company, and the behaviour of your manager and peers. There are key three between-subjects independent variables which control passages in the vignette: 
+
+1. Workplace quality (`workplace_quality`) - two levels including low and high workplace quality.
+
+2. Manager influence (`manager_influence`) - two levels including ethical and unethical manager influence.
+
+3. Peer influence (`peer_influence`) - two levels including ethical and unethical peer influence. 
+
+Participants read one of eight versions of the vignette for all eight combinations of the three independent variables. After reading the vignette, participants complete an unethical behavioural intentions questionnaire. This includes four questions on whether participants would act unethically in manipulating an expenses report. Each question has a 1-5 scale from strongly disagree to strongly agree, where higher values mean agreeing to act unethically. The four questions are then summed to produce a total scale score for the main dependent variable (`BehIntTot`).
+
+Across two studies, Jones and Kananagh (1996) found unethical behavioural intentions were consistently higher in the low compared to high quality workplace, but the effect of manager and peer influence was not consistent. For further information on the method and results, please see the linked references. The project by Evans (2022) aimed to replicate the study in several data collection hubs to add additional contemporary evidence since the original study had never been independently directly replicated. The research question is: "How does workplace quality, manager influence, and peer influence affect unethical workplace intentions?".
+
+We would like you to use what you learnt about Bayesian statistics to address the research question above. You can use any techniques covered in the lectures on Bayesian statistics to analyse the data in the way you think best addresses the research question. After walking through your analysis, write a short results section communicating your findings with appropriate statistics and data visualisation. Please justify your approach and make sure you include commented code.   
+
+```{r Evans Data, message=FALSE, warning=FALSE}
+# read data for the Evans replication project
+
+Evans_data <- read_csv("Data/Evans_data.csv") 
+glimpse(Evans_data)
+
+```
+
+## Data Analysis 
+
+The research question is: How do workplace quality, manager influence, and peer influence affect unethical workplace intentions? Therefore, we need to extract data from the columns labeled 'workplace_quality', 'manager_influence', and 'peer_influence' as our independent variables. However, based on the data set we loaded, we observed that these three columns contain character data. To conduct further analysis, we need to convert them into numerical values. Considering that Jones and Kananagh (1996) found unethical behavioral intentions to be consistently higher in low-quality workplaces compared to high-quality workplaces, indicating a significant main effect of workplace quality, it is important to investigate interactions with other variables. Since we are interested in unethical intentions, I coded high-level workplace quality, ethical manager, and peer influence as the reference group (0), and the other levels as 1, as higher values in unethical behavioral intentions indicate a higher agreement to act unethically in the end.
+ 
+```{r}
+Evans_data <- Evans_data %>% 
+  mutate(workplace_quality = as.factor(case_when(workplace_quality == "high" ~ 0,
+                             workplace_quality == "low" ~ 1))) %>%
+  mutate(manager_influence  = as.factor(case_when(manager_influence  == "ethical" ~ 0,
+                             manager_influence  == "unethical"~ 1))) %>%
+  mutate(peer_influence  = as.factor(case_when(peer_influence  == "ethical" ~ 0,
+                             peer_influence  == "unethical"~ 1)))
+```
+
+### Multiple Linear Regression Model
+
+Based on Jones and Kananagh's [-@jones1996experimental] findings that unethical behavioral intentions were consistently higher in low-quality workplaces compared to high-quality workplaces, indicating a significant main effect of workplace quality, it is important to consider interactions between different variables in our multiple linear regression model. Variables that have a large influence on the outcome are more likely to have statistically significant interactions with other influencing factors. Moreover, considering that manager and peer attitudes may be influenced by workplace quality and peer attitudes, it is reasonable to assume that interactions may exist between workplace quality and other variables.
+
+Furthermore, previous research has also shown that the effect of manager and peer influence is not always consistent. For instance, in their first study, peers had a significant influence that was masked by the significant interaction between peer and managerial influence.The influence of manager was not significant. However, this effect was not replicated in their second study, which involved older participants. In study 2, both peer and managerial influence was significant. Therefore, it is reasonable to hypothesize that there may be an interaction between peer and managerial influence.
+
+Additionally, it's worth noting that since all the variables are between-subjects, there is no need to consider a mixed model in our analysis.
+
+```{r Evans Model with interaction}
+Evans_model <- bf(BehIntTot ~ workplace_quality * manager_influence * peer_influence)
+```
+
+### Prior Decision
+
+we first check the defult prior of the model first. 
+
+```{r check the defult priors}
+get_prior(Evans_model, data = Evans_data)
+```
+Since the current research is a complete replication of previous research, we can select our prior based on their findings. The first parameter we interested in is intercept. However, I couldn't find estimated intercept or mean of unethical behavior intention at different group levels in the report. The only mean we know for now is the overall average mean, which is 7.64 with a standard deviation of 3.23 for study 1, and 6.83 with a standard deviation of 2.93 for study 2. The range of data (min to max) is from 3 to 15 in both of the previous researchs, and there is no information about the 95% confidence  interval. Based on this, we can assume that the intercept may be somewhere in the middle of the scale. Moreover, since we are conducting a linear model, we can assume a normal distribution of the data. I selected a normal distribution with mean 7 and standard deviation 2.6, as this distribution covers the range from 3 to 15 and peaks around 7. The plot below visualizes the prior distribution. 
+
+```{r intercept priors distribution visualize}
+Evans_intercptpriors <- c(prior(normal(7, 2.6)))
+
+ Evans_intercptpriors %>% 
+   parse_dist()%>% 
+   ggplot(aes(y = 0, dist = .dist, args = .args, fill = prior)) + 
+   stat_slab(normalize = "panels") + 
+   scale_fill_viridis_d(option = "plasma", end = 0.9) + 
+   guides(fill = "none") + 
+   facet_wrap(~prior) + 
+   labs(x = "Value", y = "Density") +
+   theme_classic()
+```
+
+The second parameter we are interested in is the coefficients (b). Previous researchers had conducted regression analysis for both studies. For study 1, the beta coefficients for Quality of work experience, Manager influence, and Peer influence are 0.236, -1.371, and -0.007 respectively. For study 2, the beta coefficients are 0.153, 0.246, and 0.147 respectively. Based on this information, I established the prior distribution as normal(0,0.75), with a central peak at 0 indicating a higher probability of smaller effects, while also accommodating the acceptance of larger values in both directions with a standard deviation of 0.75. This choice of prior distribution is based on previous research findings of effects in both directions. Additionally, most number of this distribution dall in the range of -1.5 to 1.5 which able to cover the largest coefficient observed in previous research (-1.371). The coefficient prior distribution is visualized below.
+
+```{r coefficient priors distribution visualize}
+Evans_bpriors <- c(prior(normal(0,0.75)))
+
+Evans_bpriors %>% 
+  parse_dist()%>% 
+  ggplot(aes(y = 0, dist = .dist, args = .args, fill = prior)) + 
+  stat_slab(normalize = "panels") + 
+  scale_fill_viridis_d(option = "plasma", end = 0.9) + 
+  guides(fill = "none") + 
+   facet_wrap(~prior) + 
+  labs(x = "Value", y = "Density") +
+  theme_classic() 
+```
+
+Since previous researcher report the standard deviation (SD), i can set a more informative sigma prior. The exponential distribution is chosen since it's commonly used for SD, with the largest density centered around zero and the density gradually decreasing as values become more positive. This reflects the expectation that sigma is likely to be small, but also acknowledges the possibility of larger values. The sigma prior distribution also show below. 
+
+```{r sigma priors distribution visualize}
+Evans_sigmapriors <- c(prior(exponential(1)))
+
+Evans_sigmapriors %>% 
+  parse_dist()%>% 
+  ggplot(aes(y = 0, dist = .dist, args = .args, fill = prior)) + 
+  stat_slab(normalize = "panels") + 
+  scale_fill_viridis_d(option = "plasma", end = 0.9) + 
+  guides(fill = "none") + 
+   facet_wrap(~prior) + 
+  labs(x = "Value", y = "Density") +
+  theme_classic() 
+```
+
+### Model Fitting
+
+After setting the prior distributions for the model parameters, the next step is to save these priors as objects. These objects can then be used to update the priors with the current dataset and obtain posterior distributions. This process involves Bayesian updating, where the prior distributions are combined with the data likelihood to obtain updated posterior distributions.
+
+```{r save the priors}
+Evans_priors <- set_prior("normal(0,0.75)", class = "b") + 
+  set_prior("normal(7, 2.6)", class = "Intercept") + 
+  set_prior("exponential(1)", class = "sigma")
+
+Evans_fit1 <- brm(
+  formula = Evans_model,
+  data = Evans_data,
+  family = gaussian(),
+  prior = Evans_priors,
+  seed = 200323,
+  sample_prior = TRUE, 
+  file = "Models/Evans_model1"
+)
+```
+
+### Model Checking
+
+Now, before proceeding with further analyses, it is essential to conduct model checking to ensure that the Bayesian model accurately captures the important features of the data and makes reliable assumptions about the data generating process. This involves examining the summary statistics of the posterior distributions and diagnostic plots to visually assess the convergence of the Markov Chain Monte Carlo (MCMC) sampling process, detect potential autocorrelation, and identify outliers or influential data points. These plots provide insights into the stability and reliability of the model estimates. 
+
+
+```{r summery the model}
+summary(Evans_fit1)
+```
+Based on the summary statistics provided, we can draw several conclusions about the convergence of the Bayesian model. Firstly, the Rhat values equal to 1 indicate that there are no issues with the model fitting process, as Rhat values greater than 1 may suggest lack of convergence. Secondly, the effective sample size (ESS) values being larger than one thousand indicate that the model has generated a sufficient number of independent samples from the posterior distribution, which is indicative of good convergence. Thirdly, we can further assess the convergence of the MCMC sampling process by examining trace plots using the following function. 
+
+```{r plot mcmc}
+plot(Evans_fit1)
+```
+
+Based on the trace plots of the MCMC chains on the left, we observe that the chains appear to be well mixed, with no evidence of being stuck at a single value or traveling too far in one direction. This suggests that the random samples generated by the MCMC algorithm are representative of the posterior distribution.
+
+Furthermore, it is important to ensure that the current normal distribution model accurately captures the features and follows a similar pattern as the data before proceeding with further analysis. This can be achieved by comparing the model's predicted distribution with the observed data. 
+
+```{r check distribution}
+pp_check(Evans_fit1, 
+         ndraws = 100) 
+```
+
+Based on the plot, it appears that the researchers were successful in capturing the data pattern. However, it's worth noting that since a Gaussian distribution is used to predict ordinal data, the resulting curve may extend beyond the range of the data. Additionally, the peak of the drawn curve may be slightly different due to the original data exhibiting positive skewness. To further improve the model, one possible consideration could be using an ordinal regression model that is specifically designed for predicting ordinal data. Despite this potential improvement, the model has performed well overall, and further evaluation of the posterior and hypothesis testing could be considered in the next steps of the analysis.
+
+### Point Estimate of Model 
+
+Based on the summery, the point estimates for the population-level effects are as follows:
+
++ Intercept: 8.70 [7.65, 9.74]
++ Workplace quality: 0.49 [-0.60, 1.59]
++ Managerial influences: 0.55 [-0.53, 1.60]
++ Peer influences: 0.51 [-0.60, 1.59]
++ Interaction between workplace quality and managerial influences: 0.49 [-0.70, 1.72]
++ Interaction between workplace quality and peer influences: 0.18 [-1.03, 1.42]
++ Interaction between managerial influences and peer influences: 0.77 [-0.40, 1.96]
++ Interaction between workplace quality, managerial influences, and peer influences: 0.38 [-0.96, 1.69]
+
+Since the reference level is high workplace quality, ethical managerial influences, and ethical peer influences, the interpretation of these coefficients is as follows:
+
++ The coefficient for workplace quality indicates that, on average, unethical behavior intention increases by 0.49 when workplace quality is low.
++ The coefficient for managerial influences indicates that, on average, unethical behavior intention increases by 0.56 when managerial influences are unethical.
++ The coefficient for peer influences indicates that, on average, unethical behavior intention increases by 0.52 when peer influences are unethical.
++ The coefficient for the interaction between workplace quality and managerial influences indicates that, on average, unethical behavior intention increases by 0.49 due to this interaction.
++ The coefficient for the interaction between workplace quality and peer influences indicates that, on average, unethical behavior intention increases by 0.18 due to this interaction.
++ The coefficient for the interaction between managerial influences and peer influences indicates that, on average, unethical behavior intention increases by 0.76 due to this interaction.
++ The coefficient for the interaction between workplace quality, managerial influences, and peer influences indicates that, on average, unethical behavior intention increases by 0.39 due to this interaction.
+
+### Posterior Distribution
+
+However, one of the key benefits of Bayesian estimation is the ability to visualize the posterior distribution as a whole, instead of relying solely on point estimates. In the following sections, we will delve into the posterior distribution to gain a comprehensive understanding of the model's uncertainties and variability.
+
+The trace plots above (left) provide an overview of the posterior probability distributions for each variable, including interactions. By comparing the prior and posterior distributions, we can visually assess how much the distributions have shifted below or above 0, which provides valuable insights into the changes in parameter estimates. This allows us to better understand the uncertainty associated with each variable.
+
+```{r probability direction}
+plot(p_direction(Evans_fit1), 
+     priors = TRUE) 
+```
+
+Based on the plot, we can see the prior distributions in blue and the posterior distributions in orange (representing positive direction) and red (representing negative direction). From the plot, it appears that more than half of the possible parameter values are positive for all the variables, although the peak of the distribution is not far from 0.
+
+Based on this information, we can conclude that all the variables have a slight positive influence on unethical behavior intention. Further analysis of the HDIs can help in better understanding the uncertainty associated with the parameter estimates and making informed interpretations about the effects of the variables on the outcome of interest.
+
+```{r HDI}
+plot(bayestestR::hdi(Evans_fit1)) 
+```
+
+Based on the plot and the 95% Highest Density Interval (HDI) that includes 0 for all the variables, it appears that none of the coefficient posteriors provide a significant positive effect. This suggests that we cannot confidently conclude that the variables (environment, peer, and manager) have a significant influence on individual unethical behavior intention based on the current data.
+
+To draw more conclusive findings about the effects of these variables, further data may be needed to increase the statistical power of the analysis. Collecting additional data or increasing the sample size could help in obtaining more precise estimates of the parameters and determining whether the variables indeed have a significant impact on unethical behavior intention. It's important to interpret the results with caution and consider the limitations of the current data when drawing conclusions about the effects of the variables of interest.
+
+### Hypothesis Testing
+
+Based on the research question "How does workplace quality, manager influence, and peer influence affect unethical workplace intentions?", the statistical hypotheses for each variable can be summarized as follows, all the hypothesis are two-tails:
+
++ H1 Alternative: Poor workplace quality will have an effect on individual unethical behavioral intentions.
++ H1 Null: Poor workplace quality will not have an effect on individual unethical behavioral intentions.
+
++ H2 Alternative: Supervisor's unethical behavior will have an effect on individual unethical behavioral intentions.
++ H2 Null: Supervisor's unethical behavior will not have an effect on individual unethical behavioral intentions.
+
++ H3 Alternative: Peer group's unethical behavior will have an effect on individual unethical behavioral intentions.
++ H3 Null: Peer group's unethical behavior will not have an effect on individual unethical behavioral intentions.
+
++ H4 Alternative: The effect of poor workplace quality on individual unethical behavior intention depends on the supervisor's unethical behavior.
++ H4 Null: The interaction between poor workplace quality and supervisor's unethical behavior will not affect individual unethical behavior intention.
+
++ H5 Alternative: The effect of poor workplace quality on individual unethical behavior intention depends on the peer group's unethical behavior.
++ H5 Null: The interaction between poor workplace quality and peer group's unethical behavior will not affect individual unethical behavior intention.
+
++ H6 Alternative: The effect of poor workplace quality on individual unethical behavior intention depends on the peer group's unethical behavior.
++ H6 Null: The interaction between supervisor's unethical behavior and peer group's unethical behavior will not affect individual unethical behavior intention.
+
+
+H7 Alternative: The effect of poor workplace quality on individual unethical behavior intention depends on both supervisor's and peer group's unethical behavior.
+H7 Null: The interaction between poor workplace quality, supervisor's unethical behavior, and peer group's unethical behavior will not affect individual unethical behavior intention.
+
+To test these hypotheses, we can use the function below that compares the null hypothesis (a point-null of 0) against the alternative hypothesis (non-null effect) using the data and model we have developed.This function is effective because it need the specification of custom priors that are informed by previous research, rather than relying on default priors.
+
+```{r hypothesis testing}
+(BFh01 <- hypothesis(Evans_fit1, 
+           hypothesis = "workplace_quality1 = 0")) 
+
+(BFh02 <- hypothesis(Evans_fit1, 
+           hypothesis = "manager_influence1 = 0"))
+
+(BFh03 <- hypothesis(Evans_fit1, 
+           hypothesis = "peer_influence1 = 0"))
+
+(BFh04 <- hypothesis(Evans_fit1, 
+           hypothesis = "workplace_quality1:manager_influence1 = 0"))
+
+(BFh05 <- hypothesis(Evans_fit1, 
+           hypothesis = "workplace_quality1:peer_influence1 = 0"))
+
+(BFh06 <- hypothesis(Evans_fit1, 
+           hypothesis = "manager_influence1:peer_influence1 = 0"))
+
+(BFh07 <- hypothesis(Evans_fit1, 
+           hypothesis = "workplace_quality1:manager_influence1:peer_influence1 = 0"))
+
+```
+
+Based on the instruction provided, it appears that the Evidence Ratio (ER) is the key value of interest for evaluating the hypothesis tests. The ER is equal to the Bayes factor BF01. The ER are `r BFh01[["hypothesis"]][["Evid.Ratio"]]`, `r BFh02[["hypothesis"]][["Evid.Ratio"]]`, `r  BFh03[["hypothesis"]][["Evid.Ratio"]]`, `r  BFh04[["hypothesis"]][["Evid.Ratio"]]`, `r  BFh05[["hypothesis"]][["Evid.Ratio"]]`, `r  BFh06[["hypothesis"]][["Evid.Ratio"]]` and `r  BFh07[["hypothesis"]][["Evid.Ratio"]]`, separately. We than can compare this value to the guideline from Wagenmakers et al. [-@wagenmakers2011psychologists]. The introduction suggests that when the evidence ratio (BF01) is below 1, it indicates support for the alternative hypothesis over the null hypothesis. 
+```{r}
+ knitr::include_graphics("BH01.png") 
+```
+
+Interestingly, except for the hypothesis related to the interaction between workplace quality and peer influence (BFH05 = `r BFh05[["hypothesis"]][["Evid.Ratio"]]`), the evidence ratios for all other hypotheses are below 1. This suggests that there is anecdotal evidence in favor of the alternative hypotheses, indicating that we may need to reject the null hypothesis and consider that the variables have an influence on individual unethical behavior intentions. These results seem to contradict our previous conclusions. One possible reason for this discrepancy could be that the variables have effects in both directions, and hence we cannot draw conclusions about the direction of the effect by simply comparing the coefficients to a point-value of 0 based on the 95% highest density interval (HDI).
+
+### Conditional Effects
+
+Additionally, we can examine the point estimates of posteriors to further investigate interactions between variables. For instance, in the case of hypothesis 5 (which had anecdotal evidence in favor of the null hypothesis), when we change peer influence from 0 to 1, we observe minimal differences in individual unethical behavior intentions across the estimates, with all the 95% credible intervals overlapping. This suggests that the influence of workplace quality on behavior intention is not dependent on peer influence.
+
+For the other hypotheses, changes in variable levels (e.g., from ethical to unethical, good quality to poor quality) result in modest increases in median point estimates of unethical behavior intentions, although the magnitude of the increase is small. These trends are also evident in later visualizations when considering the differences across the entire scale.These visualizations provide valuable insights into the effects of different variables on unethical behavior intentions. Furthermore, contrasts, which represent the posterior median differences between different levels, have been calculated. The plott that visually depict the median and 95% HDI values for the posterior of each group at different levels and the contrast across the group. 
+
+```{r conditional effect}
+(Evans_means<- emmeans(Evans_fit1, # add the model object  
+        ~ workplace_quality | peer_influence| manager_influence)) 
+
+contrast(Evans_means)
+
+```
+
+```{r workplace_quality_plot}
+workplace_quality_plot <- conditional_effects(Evans_fit1, 
+                    effects = "workplace_quality")
+
+plot(workplace_quality_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Good Workplace Quality", "Poor Workplace Quality")) + 
+  labs(x = "Workplace Quality", y = "Mean Unethical Behavior Intention")
+
+```
+
+```{r manager_influence_plot}
+manager_influence_plot <- conditional_effects(Evans_fit1, 
+                    effects = "manager_influence")
+
+plot(manager_influence_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Ethic Manager Influence", "Unethic Manager Influence")) + 
+  labs(x = "Managerial Influences", y = "Mean Unethical Behavior Intention")
+```
+
+```{r peer_influence_plot}
+peer_influence_plot <- conditional_effects(Evans_fit1, 
+                    effects = "peer_influence")
+
+plot(peer_influence_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Ethic peer influence", "Unethic peer influence")) + 
+  labs(x = "Peer Influences", y = "Mean Unethical Behavior Intention")
+```
+
+```{r WQ_MI_plot}
+WQ_MI_plot <- conditional_effects(Evans_fit1, 
+                    effects = "workplace_quality:manager_influence")
+
+
+plot(WQ_MI_plot, 
+     plot = FALSE, 
+     cat_args = list(show.legend = F))[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Good Workplace Quality", "Poor Workplace Quality")) + 
+  labs(x = "Workplace Quality", y = "Mean Unethical Behavior Intention") + 
+  scale_color_viridis_d(option = "D", begin = 0.1, end = 0.7, 
+                        name = "Group", labels = c("Ethic Manager Influence", "Unethic Manager Influence"))  
+```
+
+```{r WQ_PI_plot}
+WQ_PI_plot <- conditional_effects(Evans_fit1, 
+                    effects = "workplace_quality:peer_influence")
+
+
+plot(WQ_PI_plot, 
+     plot = FALSE, 
+     cat_args = list(show.legend = F))[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Good Workplace Quality", "Poor Workplace Quality")) + 
+  labs(x = "Workplace Quality", y = "Mean Unethical Behavior Intention") + 
+  scale_color_viridis_d(option = "D", begin = 0.1, end = 0.7, 
+                        name = "Group", labels = c("Ethic Peer Influence", "Unethic Peer Influence")) 
+```
+
+```{r MI_PI_plot}
+MI_PI_plot <- conditional_effects(Evans_fit1, 
+                    effects = "manager_influence:peer_influence")
+
+
+plot(MI_PI_plot, 
+     plot = FALSE, 
+     cat_args = list(show.legend = F))[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Ethic Manager Influence", "Unethic Manager Influence")) + 
+  labs(x = "Manager influence", y = "Mean Unethical Behavior Intention") + 
+  scale_color_viridis_d(option = "D", begin = 0.1, end = 0.7, 
+                        name = "Group", labels = c("Ethic Peer Influence", "Unethic Peer Influence"))
+```
+
+### Check Model Sensitivity 
+
+In the last step, I am interested in exploring further by comparing the current model to models without interaction and examining the differences in R-square estimates. This analysis will help shed light on how the interaction term may influence the overall model performance. Additionally, I will investigate the sensitivity of the current model to the choice of prior specifications, as this can provide valuable insights into the robustness of the findings. Lastly, I plan to fit an ordinal regression model to the data to explore whether it can potentially improve the model's performance and provide additional insights into the relationship between variables.
+
+Since this model involves four types of interactions, there are a total of 15 combinations of variables. To clarify the findings, I have assigned each interaction a serial number: 
+1 for workplace_quality:manager_influence, 2 for workplace_quality:peer_influence, 3 for manager_influence:peer_influence, and 4 for workplace_quality:manager_influence:peer_influence. 
+The original fitting model (Evans_fit1) is referred to as model 1234, which includes all four types of interactions. 
+Model 123 indicates that interaction 4 (workplace_quality:manager_influence:peer_influence) has been removed from the model, and so on.
+
+### Start of Sampling
+
+```{r}
+# the sampling process result for each model is really long. plz click the End of sampling on the left to directly jump to the model comparison sessions.
+model123 <- update(Evans_fit1, 
+                     formula. = ~ . - workplace_quality:manager_influence:peer_influence) 
+
+model124 <- update(Evans_fit1, 
+                     formula. = ~ . - manager_influence:peer_influence) 
+
+model134 <- update(Evans_fit1, 
+                     formula. = ~ . - workplace_quality:peer_influence) 
+
+model234 <- update(Evans_fit1, 
+                     formula. = ~ . - workplace_quality:manager_influence) 
+
+model12 <- update(model123, 
+                     formula. = ~ . - manager_influence:peer_influence) 
+
+model13 <- update(model134, 
+                     formula. = ~ . - workplace_quality:manager_influence:peer_influence)
+
+model14 <- update(model134, 
+                     formula. = ~ . - manager_influence:peer_influence)
+
+model23 <- update(model123, 
+                     formula. = ~ . - workplace_quality:manager_influence) 
+
+model24 <- update(model234, 
+                     formula. = ~ . - manager_influence:peer_influence)
+
+model34 <- update(model234, 
+                     formula. = ~ . - workplace_quality:peer_influence)
+
+model1 <- update(model12, 
+                     formula. = ~ . - workplace_quality:peer_influence)
+
+model2 <- update(model12, 
+                     formula. = ~ . - workplace_quality:manager_influence)
+
+model3 <- update(model34, 
+                     formula. = ~ . - workplace_quality:manager_influence:peer_influence)
+
+model4 <- update(model34, 
+                     formula. = ~ . - manager_influence:peer_influence)
+
+model0 <- update(model4, 
+                     formula. = ~ . - workplace_quality:manager_influence:peer_influence)
+
+```
+### End of sampling
+we than can compare the R squre estimation and its 95% credible interval for each model and compare it side by side. 
+
+```{r}
+R2_Evans_fit1 <- as.data.frame(bayes_R2(Evans_fit1))
+R2_model123 <- as.data.frame(bayes_R2(model123))
+R2_model124 <- as.data.frame(bayes_R2(model124))
+R2_model134 <- as.data.frame(bayes_R2(model134))
+R2_model234 <- as.data.frame(bayes_R2(model234))
+R2_model12 <- as.data.frame(bayes_R2(model12))
+R2_model13 <- as.data.frame(bayes_R2(model13))
+R2_model14 <- as.data.frame(bayes_R2(model14))
+R2_model23 <- as.data.frame(bayes_R2(model23))
+R2_model24 <- as.data.frame(bayes_R2(model24))
+R2_model34 <- as.data.frame(bayes_R2(model34))
+R2_model1 <- as.data.frame(bayes_R2(model1))
+R2_model2 <- as.data.frame(bayes_R2(model2))
+R2_model3 <- as.data.frame(bayes_R2(model3))
+R2_model4 <- as.data.frame(bayes_R2(model4))
+R2_model0 <- as.data.frame(bayes_R2(model0))
+
+R2_table <- bind_rows(R2_Evans_fit1, R2_model123, R2_model124,R2_model134,R2_model234,
+                      R2_model12,R2_model13,R2_model14,R2_model23,R2_model24,R2_model34,
+                      R2_model1,R2_model2,R2_model3,R2_model4,R2_model0)
+
+rownames(R2_table) <- c("Model with all the interaction", "Model without interaction 4", "model without interaction 3","model without interaction 2", "model without interaction 1", 
+                        "model without interaction 34", "model without interaction 24", "model without interaction 23", "model without interaction 14", "model without interaction 13", "model without interaction 12", 
+                        "model without interaction 234", "model without interaction 134", "model without interaction 124", "model without interaction 123", "model without interaction 1234")
+
+knitr::kable(R2_table, 
+             digits = 2,
+             row.names = TRUE,
+             col.names = c("R2 Estimate", "Estimated Error", "Lower 95% HDI", "Upper 95% HDI"))
+```
+
+Based on the table, we observed that the model with all interactions included has the highest R square estimate, and the R square estimate consistently drops as the number of interactions involved in the model decreases. The reason why the R square of the model without interaction 2 is the same as the original model is because interaction 2 (workplace quality:peer influence) has been proven in hypothesis testing to have no influence on individual unethical behavior intention. However, overall, the R square estimate is relatively low and the differences are not large. We can further perform model sensitivity checks to quantify the robustness of our model.
+
+In the second part, I will explore changing the prior to see how it influences the model.
+
+```{r fit with defult prior}
+Evans_fit2 <- brm(
+  formula = Evans_model,
+  data = Evans_data,
+  family = gaussian(),
+  seed = 200323,
+  sample_prior = TRUE, 
+  file = "Models/Evans_model2"
+)
+```
+
+```{r summery defult prior fitting model}
+summary(Evans_fit2)
+```
+
+```{r compare between two model}
+describe_posterior(Evans_fit1)
+describe_posterior(Evans_fit2)
+```
+
+Upon comparing the two summaries, we observed that based on our prior specifications, the coefficients are more conservative and the effective sample size (ESS) is higher. However, we also noticed conflicts in the direction of some results for certain variables. This could potentially be attributed to our choice of a restrictive prior, which limited the distribution to just cover previous findings. This may have resulted in an overly informative prior, which could have influenced our hypothesis testing and subsequent conclusions. For instance, in the case of the interaction between workplace influence and peer influence, we obtained a negative coefficient when using the default prior. Therefore, our conclusion that this interaction has no influence on individual unethical behavior intention may be unreliable. It is possible that a negative influence actually exists, but was overshadowed by our informative prior.
+Furthermore, our conclusions of anecdotal evidence in favor of alternative hypotheses for other variables may also be uncertain, as there could be larger effects that were suppressed by our choice of prior. This raises questions about the reliability and generalizability of our findings. To address this concern, I am interested in exploring the impact of a weaker user prior on our model to better understand the sensitivity of our results to prior specifications. By using a less restrictive prior, we may gain further insights into the potential influences of different variables and their effects on the outcomes of interest.
+ 
+```{r}
+weaker_priors <- set_prior("normal(0,1.5)", class = "b") + 
+   set_prior("normal(7, 3)", class = "Intercept") + 
+   set_prior("exponential(0.75)", class = "sigma")
+ 
+Evans_fit4 <- brm(
+   formula = Evans_model,
+   data = Evans_data,
+   family = gaussian(),
+   prior = weaker_priors,
+   seed = 200323,
+   sample_prior = TRUE, 
+   file = "Models/Evans_model4"
+ )
+```
+```{r}
+describe_posterior(Evans_fit4)
+```
+Based on this summary, we observed that the coefficient of the interaction between workplace_quality1 and peer_influence1 is still negative, which may indicate that our previous choice of a restrictive prior may have overshadowed some effects of interest. This suggests that the informative prior may have influenced the results and limited our ability to capture potential effects of the interaction. To gain a more comprehensive understanding of the relationship between workplace quality, peer influence, and the outcome variable, we may need to revisit our prior specifications and consider using a less restrictive prior to allow for a more nuanced analysis and interpretation of the results. 
+
+Additionally, I am also interested in trying out an ordinal regression model to further explore the relationship between variables and potentially gain additional insights. This ordinal modelling methods follows the instruction of Bürkner and Vuorre [-@pual2019].
+
+```{r ordinal regression model}
+Evans_priors2 <- set_prior("normal(0,0.75)", class = "b") + 
+  set_prior("normal(7, 2.6)", class = "Intercept") 
+#set_prior("exponential(1)", class = "sigma") has been remove since is not work in ordinal regression model
+
+Evans_fit3 <- brm(
+  formula = Evans_model,
+  data = Evans_data,
+  family = acat("probit"),
+  seed = 200323,
+  prior = Evans_priors2,
+  file = "Models/Evans_fit3",
+  control = list(adapt_delta = 0.99)
+)
+```
+
+We will perform a posterior predictive check to assess the performance of an ordinal regression model, as we expect it may do a better job in capturing the pattern of the data compared to a normal distribution model.
+
+```{r}
+pp_check(Evans_fit3, 
+         ndraws = 100) 
+```
+
+Based on the plot, we can observe that this model follows nearly the same pattern as the observed data. However, we also notice that the peak in the posterior predictive distribution is much higher than that of the original data, which may indicate a potential issue in the sampling process which can be observe in MCMC chains below. Although we cannot directly apply R square to ordinal families, I will continue to use the mutiple regression model for evaluation purposes, as it aligns with my current knowledge. However, it is worth exploring the ordinal regression model further to gain additional insights.
+
+```{r}
+plot(Evans_fit3)
+```
+
+
+## Write up 
+
+The objective of this study is to explore the relationship between workplace quality, manager influence, and peer influence on unethical workplace intentions. Jones and Kavanagh's (1996) research found that unethical behavior intentions were consistently higher in low-quality workplaces, but the impact of manager and peer influence was not consistent. They also observed that peer influence had a greater impact on unethical behavior intentions among undergraduate participants with limited work experience, whereas for older participants with more work experience, manager influence had a greater impact. Additionally, the researchers observed that the impact of peer influence was obscured by the interaction effect between peer influence and manager influence. This research has not been replicated until recently. The aim of this study is to investigate the impact of workplace quality, manager influence, and peer influence on unethical workplace intentions, and evaluate the data using Bayesian statistics. Our hypotheses are that each of these factors will have a separate effect on unethical behavior intentions. Additionally, we will include interaction terms to investigate any potential combined effects. To achieve this, we have used a multiple linear regression model to analyze the data.
+
+our two tail statistic hypothesis are list below:
++ H1 Alternative: Poor workplace quality will have an effect on individual unethical behavioral intentions. 
++ H1 Null: Poor workplace quality will not have an effect on individual unethical behavioral intentions.
+
++ H2 Alternative: Supervisor’s unethical behavior will have an effect on individual unethical behavioral intentions. 
++ H2 Null: Supervisor’s unethical behavior will not have an effect on individual unethical behavioral intentions.
+
++ H3 Alternative: Peer group’s unethical behavior will have an effect on individual unethical behavioral intentions. 
++ H3 Null: Peer group’s unethical behavior will not have an effect on individual unethical behavioral intentions.
+
++ H4 Alternative: The effect of poor workplace quality on individual unethical behavior intention depends on the supervisor’s unethical behavior. 
++ H4 Null: The interaction between poor workplace quality and supervisor’s unethical behavior will not affect individual unethical behavior intention.
+
++ H5 Alternative: The effect of poor workplace quality on individual unethical behavior intention depends on the peer group’s unethical behavior. 
++ H5 Null: The interaction between poor workplace quality and peer group’s unethical behavior will not affect individual unethical behavior intention.
+
++ H6 Alternative: The effect of poor workplace quality on individual unethical behavior intention depends on the peer group’s unethical behavior. 
++ H6 Null: The interaction between supervisor’s unethical behavior and peer group’s unethical behavior will not affect individual unethical behavior intention.
+
++ H7 Alternative: The effect of poor workplace quality on individual unethical behavior intention depends on both supervisor’s and peer group’s unethical behavior. 
++ H7 Null: The interaction between poor workplace quality, supervisor’s unethical behavior, and peer group’s unethical behavior will not affect individual unethical behavior intention.
+
+The study considers workplace quality, manager influence, and peer influence as independent variables, each with two levels, and individual unethical behavior intention as the dependent variable. The prior specifications for the intercept, coefficients, and sigma are based on previous findings and are justified as follows: intercept - normal distribution with a mean of 7 and standard deviation of 2.6; coefficients - normal distribution with a mean of 0 and standard deviation of 0.75; sigma - exponential distribution with a rate parameter of 1. Further details on the justification of the priors can be found in the full report and the Jones and Kavanagh's (1996) paper.
+
+```{r, echo=FALSE}
+
+Evans_priors  %>% 
+  parse_dist() %>% # Function from tidybayes/ggdist to turn prior into a dataframe
+  ggplot(aes(y = 0, dist = .dist, args = .args, fill = prior)) + # Fill in details from prior and add fill
+  stat_slab(normalize = "panels") + # ggdist layer to visualise distributions
+  scale_fill_viridis_d(option = "plasma", end = 0.9) + # Add colour scheme
+  guides(fill = "none") + # Remove legend for fill
+  facet_wrap(~prior) + # Split into a different panel for each prior
+  labs(x = "Value", y = "Density") +
+  theme_classic()
+```
+
+We use R 4.2.2 and package brms, bayestestR, tidybayes, see, emmeans, patchwork and tidyverse to help us analysis and visualized the data. Markov Chain Monte Carlo simulations (MCMC) chains were used to generate 4000 samples to generate postior distribution. 
+
+```{r, echo=FALSE}
+plot(Evans_fit1)
+```
+
+Based on the summery, The hat values are equal to 1, the ESS values are larger than 1000, and the chain visualization shows no indication of getting stuck at a single value. These findings indicate that there are no issues with the model convergence. Furthermore, the plot below indicates that the model is able to capture the data pattern.
+
+```{r, echo=FALSE}
+pp_check(Evans_fit1, 
+         ndraws = 100) 
+
+```
+
+Based on the plot and the 95% Highest Density Interval (HDI) that includes 0 for all the variables, it appears that none of the coefficient posteriors provide a significant positive effect. This suggests that we cannot confidently conclude that the variables (environment, peer, and manager) have a significant influence on individual unethical behavior intention based on the current data.
+
+```{r, echo=FALSE}
+plot(bayestestR::hdi(Evans_fit1)) 
+```
+
+However, after we conductedfurther evaluation which is hypothesis testing for each group and obtained evidence ratios of BFH01 = 0.9048768, BFH02 =  0.8773134, BFH03: 0.8430152, BFH04: 0.8340765, BFH05: 1.1024213, BFH06: 0.5698168, and BFH07: 0.934855. Based on Wagenmakers et al. (2011), when the evidence ratio is below 1, it suggests support for the alternative hypothesis over the null hypothesis. With the exception of H5, all the other ratios below one suggest that there is anecdotal evidence to support those alternative hypotheses.
+
+We also visualized the effects of variables to examine their interaction.
+
+```{r, echo=FALSE}
+workplace_quality_plot <- conditional_effects(Evans_fit1, 
+                    effects = "workplace_quality")
+
+plot(workplace_quality_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Good Workplace Quality", "Poor Workplace Quality")) + 
+  labs(x = "Workplace Quality", y = "Mean Unethical Behavior Intention")
+```
+
+```{r, echo=FALSE}
+manager_influence_plot <- conditional_effects(Evans_fit1, 
+                    effects = "manager_influence")
+
+plot(manager_influence_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Ethic Manager Influence", "Unethic Manager Influence")) + 
+  labs(x = "Managerial Influences", y = "Mean Unethical Behavior Intention")
+```
+
+```{r, echo = FALSE}
+peer_influence_plot <- conditional_effects(Evans_fit1, 
+                    effects = "peer_influence")
+
+plot(peer_influence_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Ethic peer influence", "Unethic peer influence")) + 
+  labs(x = "Peer Influences", y = "Mean Unethical Behavior Intention")
+```
+
+```{r, echo=FALSE}
+WQ_MI_plot <- conditional_effects(Evans_fit1, 
+                    effects = "workplace_quality:manager_influence")
+
+
+plot(WQ_MI_plot, 
+     plot = FALSE, 
+     cat_args = list(show.legend = F))[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Good Workplace Quality", "Poor Workplace Quality")) + 
+  labs(x = "Workplace Quality", y = "Mean Unethical Behavior Intention") + 
+  scale_color_viridis_d(option = "D", begin = 0.1, end = 0.7, 
+                        name = "Group", labels = c("Ethic Manager Influence", "Unethic Manager Influence"))  
+```
+
+```{r, echo=FALSE}
+WQ_PI_plot <- conditional_effects(Evans_fit1, 
+                    effects = "workplace_quality:peer_influence")
+
+
+plot(WQ_PI_plot, 
+     plot = FALSE, 
+     cat_args = list(show.legend = F))[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Good Workplace Quality", "Poor Workplace Quality")) + 
+  labs(x = "Workplace Quality", y = "Mean Unethical Behavior Intention") + 
+  scale_color_viridis_d(option = "D", begin = 0.1, end = 0.7, 
+                        name = "Group", labels = c("Ethic Peer Influence", "Unethic Peer Influence")) 
+
+```
+
+```{r, echo=FALSE}
+MI_PI_plot <- conditional_effects(Evans_fit1, 
+                    effects = "manager_influence:peer_influence")
+
+
+plot(MI_PI_plot, 
+     plot = FALSE, 
+     cat_args = list(show.legend = F))[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(3, 15), breaks = seq(3, 15, 2)) + 
+  scale_x_discrete(labels = c("Ethic Manager Influence", "Unethic Manager Influence")) + 
+  labs(x = "Manager influence", y = "Mean Unethical Behavior Intention") + 
+  scale_color_viridis_d(option = "D", begin = 0.1, end = 0.7, 
+                        name = "Group", labels = c("Ethic Peer Influence", "Unethic Peer Influence"))
+```
+
+In order to check the sensitivity of our model, we first removed all the interactions and compared the R-squared values. As shown in the table, we observed that the model with all interactions included had the highest R-squared estimate, and the R-squared estimate consistently decreased as the number of interactions involved in the model decreased. This indicates that it is worthwhile to include interactions in the model.
+
+```{r, echo =FALSE}
+knitr::kable(R2_table, 
+             digits = 2,
+             row.names = TRUE,
+             col.names = c("R2 Estimate", "Estimated Error", "Lower 95% HDI", "Upper 95% HDI"))
+```
+
+Additionally, since we used a very restrictive prior in the beginning, we examined the model with the default prior and a weaker prior. The order of the summaries presented below are for the current model, the model with the default prior, and the model with the weaker prior (intercept - normal distribution with a mean of 7 and standard deviation of 3; coefficients - normal distribution with a mean of 0 and standard deviation of 1.5; sigma - exponential distribution with a rate parameter of 0.75).
+
+```{r}
+describe_posterior(Evans_fit1)
+describe_posterior(Evans_fit2)
+describe_posterior(Evans_fit4)
+```
+
+Upon examining the summary, it becomes apparent that in the default prior and weaker prior models, the coefficient of the interaction between workplace_quality1 and peer influence is negative, contrary to the direction in our current model. This finding suggests that the prior specifications we used may have been too restrictive. As a result, it may be necessary to revisit our prior assumptions and consider using a less stringent prior to enable a more nuanced analysis and interpretation of the results.
+
+I had upload all the model and the data that i used to the github (link at every beginning), feel free to download and re-run it. 
+
+
+# Question 3: Replication of Dunn (2014)
+
+The data file below includes an unpublished replication of [Dunn (2014)](http://link.springer.com/10.1007/s10755-013-9256-1). Dunn wanted to understand the impact of motivation and statistics anxiety on students' academic procrastination. The sample in the original study included graduate students who were completing an online only course. The study included the following variables: 
+
+- General strategies for learning (GLS; `GLS`) - A subscale of the Motivated Strategies for Learning Questionnaire (MSLQ) which measures academic self-regulation. Measured on a 1-7 scale, with higher values meaning higher self-regulation. 
+
+- Intrinsic motivation (`Instrinsic`) - A subscale of the MSLQ which measure intrinsic motivation - where people inherently enjoy a task. Measured on a 1-7 scale, with higher values meaning higher intrinsic motivation. 
+
+- Statistical Anxiety Rating Scale (STARS; `STARS`) - A measure of statistics anxiety where we only included the statistics test and class anxiety subscale. Measured on a 1-5 scale, with higher values meaning higher statistics anxiety.  
+
+- Procrastination Assessment Scale for Students (PASS; `PASS`) - A measure of passive procrastination on keeping up with writing assignments and studying for exams. The scales includes six items measured on a 1-5 scale with higher scores meaning greater procrastination, but this scale uses the sum of items creating a possible range of 6-30.
+
+Dunn used PASS as an outcome variable and used GLS, intrinsic motivation, and STARS as predictor variables. They used frequentist statistics and found the model explained a statistically significant amount of variance in PASS, and GLS was a significant negative predictor of PASS. For further information on the method and results, please see the linked references. 
+
+We wanted to replicate the study to see if we would observe similar findings in traditional face-to-face students. Our research question was: do instrinsic motivation, academic self-regulation, and statistics anxiety influence students' passive procrastination? We expected intrinsic motivation and self-regulation to be negative predictors, whereas we expected statistics anxiety to be a positive predictor of passive procrastination. 
+
+We would like you to use what you learnt about Bayesian statistics to address the research question and predictions above. You can use any techniques covered in the lectures on Bayesian statistics to analyse the data in the way you think best addresses the research question. After walking through your analysis, write a short results section communicating your findings with appropriate statistics and data visualisation. Please justify your approach and make sure you include commented code.   
+
+```{r Dunn Data, message=FALSE, warning=FALSE}
+# read data from a replication attempt of Dunn (2014)
+Dunn_data <- read_csv("Data/Dunn_replication.csv")
+
+glimpse(Dunn_data)
+```
+
+## Data Analysis 
+
+The research question focuses on investigating whether intrinsic motivation, academic self-regulation, and statistics anxiety influence students' passive procrastination, with specific attention to the variables GSL_mean, Intrinsic_mean, and STARS_mean in relation to PASS_sum. We expected intrinsic motivation (Intrinsic_mean) and self-regulation (GSL_mean) to be negative predictors, whereas we expected statistics anxiety (STARS_mean) to be a positive predictor of passive procrastination. Before delving into further analysis, it is necessary to mean center the predictors to mitigate potential multicollinearity issues, improve numerical stability, and enhance interpretability.
+
+```{r}
+Dunn_data <- Dunn_data %>% 
+  mutate(GSL_mean = GSL_mean - mean(GSL_mean), 
+         Intrinsic_mean = Intrinsic_mean - mean(Intrinsic_mean),
+         STARS_mean = STARS_mean - mean(STARS_mean))
+
+```
+
+Previous research has employed multiple linear regression to investigate the influence of three independent variables on the dependent variable. These studies have thoroughly examined the independence, normality, homoscedasticity, and linearity of the dataset and have found that the assumptions for multiple linear regression are met. As a result, interactions were not included in the analysis, as the variables were treated as independent. However, in our current research, despite replicating previous studies, we will still incorporate interactions to thoroughly recheck the underlying assumptions of the dataset, given the small sample size in the previous research.
+
+### Multiple Linear Regression Model
+
+```{r}
+Dunn_model <- bf(PASS_sum ~ GSL_mean * Intrinsic_mean * STARS_mean)
+```
+
+
+### Prior Decision
+
+We also need to have a look at the defult prior first. To see which prior we allow to change. moreover, Drawing from my experience in question 2, I have decided to choose a weaker prior for this question in order to avoid potential hidden influences. By using a less restrictive prior, I aim to minimize the potential bias introduced by overly informative priors and obtain a more robust and unbiased analysis of the data. 
+
+```{r}
+get_prior(Dunn_model, data = Dunn_data)
+```
+
+Based on the previous research [@dunn2014wait], we can select our prior for the intercept. The estimated intercept of PASS is 15.29 with a standard deviation of 5.26. Although there is no information available about the range or confidence interval of previous PASS results, we do know that the possible range of the scale is 6-30. Therefore, we choose a normal distribution intercept prior with a mean of 15 and a standard deviation of 5, allowing us to cover the entire scale and aligning with the findings of previous research. The prior distribution for the intercept is visualized below. The choice of a normal distribution is appropriate here, as previous research has examined the normality of the data.
+
+```{r}
+Dunn_intercptpriors <- c(prior(normal(15, 5)))
+
+Dunn_intercptpriors %>% 
+   parse_dist()%>% 
+   ggplot(aes(y = 0, dist = .dist, args = .args, fill = prior)) + 
+   stat_slab(normalize = "panels") + 
+   scale_fill_viridis_d(option = "plasma", end = 0.9) + 
+   guides(fill = "none") + 
+   facet_wrap(~prior) + 
+   labs(x = "Value", y = "Density") +
+   theme_classic()
+```
+For the coefficients, we have information from previous research on the unstandardized β weights and partial correlations. The β coefficient for GSL is -2.5, for STCA it is 0.78, and for IGO it is -0.67. These coefficients represent the change in the outcome variable Y associated with a change of 1 unit in the corresponding independent variable. Based on this information, I have established the prior distribution as normal(0, 1.25) for the coefficients. This prior has a peak at 0, but the standard deviation is larger (1.25), allowing for a larger probability of accepting larger values in both directions, considering that one of our β coefficients (-2.5) is quite large. This prior distribution is visualized below.
+
+```{r}
+Dunn_bpriors <- c(prior(normal(0,1.25)))
+
+Dunn_bpriors %>% 
+  parse_dist()%>% 
+  ggplot(aes(y = 0, dist = .dist, args = .args, fill = prior)) + 
+  stat_slab(normalize = "panels") + 
+  scale_fill_viridis_d(option = "plasma", end = 0.9) + 
+  guides(fill = "none") + 
+   facet_wrap(~prior) + 
+  labs(x = "Value", y = "Density") +
+  theme_classic() 
+```
+Based on the reported standard deviation (SD) of 5.26 for the estimated intercept in previous research, we can incorporate a more informative prior for sigma. To capture the possibility of a wider range of values for sigma, given our expectation that it need to be larger enough to cover the SD found in the previous study, I suggest using an exponential(0.5) distribution. This distribution is commonly used for SD, with the density centered around zero and gradually decreasing as values become more positive. The prior distribution for sigma is visualized below, reflecting our updated understanding.
+
+```{r}
+Dunn_sigmapriors <- c(prior(exponential(0.5)))
+
+Dunn_sigmapriors %>% 
+  parse_dist()%>% 
+  ggplot(aes(y = 0, dist = .dist, args = .args, fill = prior)) + 
+  stat_slab(normalize = "panels") + 
+  scale_fill_viridis_d(option = "plasma", end = 0.9) + 
+  guides(fill = "none") + 
+   facet_wrap(~prior) + 
+  labs(x = "Value", y = "Density") +
+  theme_classic()
+```
+
+### Model Fitting
+
+Once the prior distributions for the model parameters have been established, the next step is to define and save these priors as objects. These objects will be used to update the priors with the current dataset and obtain posterior distributions using Bayesian updating. moreover, although we not know about the current model yet. 
+
+```{r}
+Dunn_priors <- set_prior("normal(0,1.25)", class = "b") + 
+  set_prior("normal(15, 5)", class = "Intercept") + 
+  set_prior("exponential(0.5)", class = "sigma")
+
+Dunn_fit1 <- brm(
+  formula = Dunn_model,
+  data = Dunn_data,
+  family = gaussian(),
+  prior = Dunn_priors,
+  seed = 200323,
+  sample_prior = TRUE, 
+  file = "Models/Dunn_model1"
+)
+```
+
+### Model Checking
+
+Similar to question 2, i will start with model checking of R hat and ESS and visualized the the Markov Chain Monte Carlo (MCMC) sampling process.
+```{r}
+summary(Dunn_fit1)
+plot(Dunn_fit1)
+```
+
+As part of model checking, I examined the R hat statistic and effective sample size (ESS) for the MCMC sampling process, similar to question 2. The R hat statistic was found to be equal to 1, and the ESS exceeded 1000, indicating that the sampling process is reliable and there are no issues with chain convergence. Moreover, visual inspection of the MCMC chains revealed that they are well mixed and no signs of being trapped at a single value or displaying excessive movement in one direction. This three result supports the reliability of the MCMC sampling process and reinforce the validity of the posterior distributions obtained.
+
+The next step is to evaluate whether the current model aligns with the observed data pattern and see if the model captures the observed trends, patterns, and variability in the data.
+
+```{r}
+pp_check(Dunn_fit1, 
+         ndraws = 100) 
+```
+
+Based on the current coefficients, we can conclude that our findings regarding self-regulation (GLS) and statistics anxiety are consistent with our expectations. However, our finding of intrinsic motivation is inconsistent with our expectation, as the coefficients suggest a different direction of effect than anticipated.
+
+### Point Estimate of Model
+
+Based on the summery, the point estimates for the population-level effects are as follows:
+
++ Intercept: 18.91 [18.24, 19.56]
++ GSL_mean: -2.35 [-3.12, -1.57]
++ Intrinsic_mean: 0.77 [0.11, 1.43]
++ STARS_mean: 0.25 [-0.63, 1.14]
++ Interaction between GSL_mean and Intrinsic_mean: 0.18 [-0.34, 0.70]
++ Interaction between GSL_mean and STARS_mean: 0.10 [-0.88, 1.08]
++ Interaction between Intrinsic_mean and STARS_mean: -0.32 [-1.13, 0.46]
++ Interaction between GSL_mean, Intrinsic_mean and STARS_mean: -0.08 [-0.77, 0.60]
+
+The interpretation of these coefficients is as follows:
+
++ The coefficient for GLS_mean indicates that, change of 1 unit in the GSL score is associated with a change of -2.35 units in the PASS score from the intercept estimate.
+
++ The coefficient for Intrinsic_mean indicates that, change of 1 unit in the intrinsic motivation score is associated with a change of 0.77 units in the PASS score from the intercept estimate.
+
++ The coefficient for STARS_mean indicates that, change of 1 unit in the Statistical Anxiety Rating Scale score is associated with a change of 0.25 units in the PASS score from the intercept estimate.
+
++ The coefficient for Interaction between GSL_mean and Intrinsic_mean indicates that, on average, PASS score increases by 0.18 due to this interaction.
+
++ The coefficient for Interaction between GSL_mean and STARS_mean indicates that, on average, PASS score increases by 0.10 due to this interaction.
+.
++ The coefficient for Interaction between Intrinsic_mean and STARS_mean indicates that, on average, PASS score decreases by 0.32 due to this interaction.
+
++ The coefficient for Interaction between GSL_mean, Intrinsic_mean and STARS_mean indicates that, on average, PASS score decreases by 0.08 due to this interaction.
+
+Based on current coefficients, we can conclude that our finding of self-regulation (GLS) and statistics anxiety are consistant with our expectation. but our finding of intrinsic motivation is inconsistant with our expectation. 
+
+### Posterior Distribution
+
+Similar to question 2, I will begin by visualizing the probability of direction with the priors.
+
+```{r}
+plot(p_direction(Dunn_fit1), 
+     priors = TRUE) 
+```
+
+Based on the plot, it can be observed that for the variable GLS, all of the posterior distribution is below zero, while for intrinsic motivation, almost all of the posterior distribution is above zero. However, for the other variables, there seems to be no discernible effect, although further evaluation is needed. To gain a better understanding, I also plotted the Highest Density Intervals (HDI) to further examine the credible ranges of the estimated parameters.
+
+```{r}
+plot(bayestestR::hdi(Dunn_fit1)) 
+```
+
+Based on the HDI plot, we can draw a similar conclusion as the probability of direction plot. The Highest Density Intervals (HDI) for the variables GLS and intrinsic motivation do not include zero, indicating that there is a high probability that GLS has a negative effect and intrinsic motivation has a positive effect. However, for the current dataset, we can only draw conclusions for these two variables. If we want to draw more conclusions of other variables based on the plot, we need to collect more data. 
+
+Furthermore, based on the analysis of the probability of direction plot and the HDI plot, it has been further revealed that the effect of intrinsic motivation is opposite to our initial expectation, showing a positive effect instead of a negative one. On the other hand, the effect of General Strategies for Learning (GLS) aligns with our expectation. As for statistics anxiety, while the plot shows a positive direction, the effect does not seem significant. Therefore, it is crucial to perform hypothesis testing to gain a deeper understanding of the dataset and obtain more conclusive insights.
+
+### Hypothesis Testing
+
+Based on the research question: do instrinsic motivation, academic self-regulation, and statistics anxiety influence students’ passive procrastination? We expected intrinsic motivation and self-regulation to be negative predictors, whereas we expected statistics anxiety to be a positive predictor of passive procrastination. I have outlined the following one tail hypotheses based on our expectations for H1,2,3.
+
++ H1 Alternative: Self-regulation will have an negative effect on passive procrastination.
++ H1 null: Self-regulation will have an possitive effect on passive procrastination.
+
++ H2 Alternative: Intrinsic motivation will have an negative effect on passive procrastination.
++ H2 null: Intrinsic motivation will have an possitive effect on passive procrastination.
+
++ H3 Alternative: Statistics anxiety will have an positive effect on passive procrastination.
++ H3 null: Statistics anxiety will have an nagetive effect on passive procrastination.
+
+As for the interactions, since they are of personal interest, we do not set a specific direction for the hypotheses and are interested in exploring whether there are any significant effects of each interaction on the outcome，therefore the hypothesis will be in two tails.
+
++ H4 Alternative: Interaction between GSL_mean and Intrinsic_mean will affect passive procrastination.
++ H4 null: Interaction between GSL_mean and Intrinsic_mean will not affect passive procrastination.
+
++ H5 Alternative: Interaction between GSL_mean and STARS_mean will affect passive procrastination.
++ H5 null:  Interaction between GSL_mean and STARS_mean  will not affect passive procrastination.
+
++ H6 Alternative: Interaction between Intrinsic_mean and STARS_mean will affect passive procrastination.
++ H6 null:  Interaction between Intrinsic_mean and STARS_mean will not affect passive procrastination.
+
++ H7 Alternative: Interaction between GSL_mean, Intrinsic_mean and STARS_mean will affect passive procrastination.
++ H7 null: Interaction between GSL_mean, Intrinsic_mean and STARS_mean will not affect passive procrastination.
+
+We still use hypothesis() function to exam the hypothesis.
+
+```{r}
+(DBFh01 <- hypothesis(Dunn_fit1, 
+           hypothesis = "GSL_mean > 0")) 
+```
+```{r}
+(DBFh02 <- hypothesis(Dunn_fit1, 
+            hypothesis = "Intrinsic_mean > 0"))
+```
+```{r}
+(DBFh03 <- hypothesis(Dunn_fit1, 
+            hypothesis = "STARS_mean < 0"))
+```
+
+```{r}
+(DBFh04 <- hypothesis(Dunn_fit1, 
+            hypothesis = "GSL_mean:Intrinsic_mean = 0"))
+```
+
+```{r}
+(DBFh05 <- hypothesis(Dunn_fit1, 
+            hypothesis = "GSL_mean:STARS_mean = 0"))
+```
+
+```{r}
+(DBFh06 <- hypothesis(Dunn_fit1, 
+            hypothesis = "Intrinsic_mean:STARS_mean = 0"))
+```
+
+```{r}
+(DBFh07 <- hypothesis(Dunn_fit1, 
+            hypothesis = "GSL_mean:Intrinsic_mean:STARS_mean = 0"))
+```
+```{r}
+ knitr::include_graphics("BH01.png") 
+```
+
+We followed the instructions from Wagenmakers et al. [-@wagenmakers2011psychologists] to interpret our results. For H1, the evidence ratio is `r DBFh01[["hypothesis"]][["Evid.Ratio"]]`, indicating extreme evidence in favor of the hypothesis that  Self-regulation will have an negative effect on passive procrastination. For H2, the evidence ratio is `r DBFh02[["hypothesis"]][["Evid.Ratio"]]`, which suggests very strong evidence in favor of the hypothesis that Intrinsic motivation will have an positive effect on passive procrastination. For H3, although we did not observe a significant effect based on the plot, there is anecdotal evidence (ER = `r DBFh03[["hypothesis"]][["Evid.Ratio"]]`) supporting the hypothesis that statistics anxiety has a positive effect on passive procrastination.
+
+As for H4, H5, H6, and H7, which are the hypotheses about the interactions, all the evidence ratios are greater than 1, indicating that the evidence supports H0 (no interaction), which is consistent with previous research.
+
+### Conditional Effect
+
+Although we not interested in the interaction anymore, we can still have a look at the conditional effect to see how each variables affect the passive procrastination. 
+
+```{r}
+Self_regulation_plot <- conditional_effects(Dunn_fit1, 
+                    effects = "GSL_mean")
+
+plot(Self_regulation_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(6, 30), breaks = seq(6, 30, 4)) + 
+  labs(x = "mean centre Self-regulation", y = "passive procrastination")
+```
+
+```{r}
+Intrinsic_motivation_plot <- conditional_effects(Dunn_fit1, 
+                    effects = "Intrinsic_mean")
+
+plot(Intrinsic_motivation_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(6, 30), breaks = seq(6, 30, 4)) + 
+  labs(x = "mean centre Intrinsic_motivation", y = "passive procrastination")
+```
+
+```{r}
+statistics_anxiety_plot <- conditional_effects(Dunn_fit1, 
+                    effects = "STARS_mean")
+
+plot(statistics_anxiety_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(6, 30), breaks = seq(6, 30, 4)) + 
+  labs(x = "mean centre statistics_anxiety", y = "passive procrastination")
+```
+
+### Model Sensitivity
+
+In the final step of our analysis, we examined whether removing the interaction from the model would improve the R square value. Additionally, we investigated the sensitivity of the current model to the choice of prior specifications.
+
+```{r}
+Dunn_model2 <- bf(PASS_sum ~ GSL_mean+Intrinsic_mean+STARS_mean)
+Dunn_fit2 <- brm(
+  formula = Dunn_model2,
+  data = Dunn_data,
+  family = gaussian(),
+  prior = Dunn_priors,
+  seed = 200323,
+  sample_prior = TRUE, 
+  file = "Models/Dunn_model2"
+)
+```
+```{r}
+R2_Dunn_fit1 <- as.data.frame(bayes_R2(Dunn_fit1))
+R2_Dunn_fit2 <- as.data.frame(bayes_R2(Dunn_fit2))
+
+R2_Dunn_table <- bind_rows(R2_Dunn_fit1, R2_Dunn_fit2)
+rownames(R2_Dunn_table) <- c("Model with interaction", "Model without interaction")
+
+knitr::kable(R2_Dunn_table, 
+             digits = 2,
+             row.names = TRUE,
+             col.names = c("R2 Estimate", "Estimated Error", "Lower 95% HDI", "Upper 95% HDI"))
+```
+
+Interestingly, despite our previous finding suggesting that interactions have no effect on passive procrastination, we observed that the model with interactions included had a slightly higher R-square compared to the model without interactions, although the difference was not substantial. We then proceeded to investigate the sensitivity of the current model to the choice of prior specifications by changing the user prior to the default prior, and examining its influence on the results.
+
+```{r}
+Dunn_fit3 <- brm(
+  formula = Dunn_model,
+  data = Dunn_data,
+  family = gaussian(),
+  seed = 200323,
+  sample_prior = TRUE, 
+  file = "Models/Dunn_model3"
+)
+```
+
+```{r}
+describe_posterior(Dunn_fit1)
+describe_posterior(Dunn_fit3)
+```
+By comparing the short posterior summery, we can observed that the prior we choose has every little influence toward the final result. This suggests our results are robust to these two choices of prior and my choice prior is not too restrict in this question.
+
+
+## Write up 
+
+The objective of this study is to investigate the influence of intrinsic motivation, academic self-regulation, and statistics anxiety on students' passive procrastination. Dunn (2014) used GLS (self-regulation), intrinsic motivation, and STARS (statistics anxiety) as predictor variables and PASS (passive procrastination) as the outcome variable to examine their effects on passive procrastination. Dunn found that the effect of GLS on passive procrastination was significant. We aim to replicate Dunn's research with face-to-face students and explore if we can identify any new findings. Despite the assumption of independence, normality, and homoscedasticity for the variables, we will include interactions in our model to investigate any possible effects of interactions.
+
+We have developed a set of hypotheses for our study, with the first three having a specific direction, indicating our expectation for them, and requiring a one-tailed analysis. The remaining hypothesis is of personal interest, and thus, we will test it with a two-tailed analysis.
+
++ H1 Alternative: Academic self-regulation will have a negative effect on passive procrastination. 
++ H1 Null: Academic self-regulation will have no effect on passive procrastination.
+
++ H2 Alternative: Intrinsic motivation will have a negative effect on passive procrastination. 
++ H2 Null: Intrinsic motivation will have no effect on passive procrastination.
+
++ H3 Alternative: Statistics anxiety will have a positive effect on passive procrastination. 
++ H3 Null: Statistics anxiety will have no effect on passive procrastination.
+
++ H4 Alternative: The interaction between academic self-regulation (GSL_mean) and intrinsic motivation (Intrinsic_mean) will affect passive procrastination. 
++ H4 Null: The interaction between academic self-regulation (GSL_mean) and intrinsic motivation (Intrinsic_mean) will have no effect on passive procrastination.
+
++ H5 Alternative: The interaction between academic self-regulation (GSL_mean) and statistics anxiety (STARS_mean) will affect passive procrastination. 
++ H5 Null: The interaction between academic self-regulation (GSL_mean) and statistics anxiety (STARS_mean) will have no effect on passive procrastination.
+
++ H6 Alternative: The interaction between intrinsic motivation (Intrinsic_mean) and statistics anxiety (STARS_mean) will affect passive procrastination. 
++ H6 Null: The interaction between intrinsic motivation (Intrinsic_mean) and statistics anxiety (STARS_mean) will have no effect on passive procrastination.
+
++ H7 Alternative: The interaction between academic self-regulation (GSL_mean), intrinsic motivation (Intrinsic_mean), and statistics anxiety (STARS_mean) will affect passive procrastination. 
++ H7 Null: The interaction between academic self-regulation (GSL_mean), intrinsic motivation (Intrinsic_mean), and statistics anxiety (STARS_mean) will have no effect on passive procrastination.
+
+The prior distributions for the model parameters were chosen based on Dunn's (2014) findings. The intercept was assigned a normal distribution with a mean of 15 and a standard deviation of 5, while the coefficients were assigned a normal distribution with a mean of 0 and a standard deviation of 1.25. The standard deviation parameter, sigma, was assigned an exponential distribution with a rate parameter of 0.5. A full report detailing the justification for these priors is available upon request.
+
+```{r, echo=FALSE}
+Dunn_priors   %>% 
+  parse_dist() %>% # Function from tidybayes/ggdist to turn prior into a dataframe
+  ggplot(aes(y = 0, dist = .dist, args = .args, fill = prior)) + # Fill in details from prior and add fill
+  stat_slab(normalize = "panels") + # ggdist layer to visualise distributions
+  scale_fill_viridis_d(option = "plasma", end = 0.9) + # Add colour scheme
+  guides(fill = "none") + # Remove legend for fill
+  facet_wrap(~prior) + # Split into a different panel for each prior
+  labs(x = "Value", y = "Density") +
+  theme_classic()
+```
+e used R 4.2.2 and several packages including brms, bayestestR, tidybayes, see, emmeans, patchwork, and tidyverse to analyze and visualize the data. Markov Chain Monte Carlo simulations were run with 4000 samples to generate posterior distributions. 
+```{r}
+plot(Dunn_fit1)
+```
+
+The hat values were all equal to 1, the ESS values were larger than 1000, and the chain visualization showed no indication of getting stuck at a single value, indicating that the model converged well. Furthermore, the plot below demonstrates that the model was able to capture the data pattern.
+
+```{r}
+pp_check(Dunn_fit1, 
+         ndraws = 100) 
+
+```
+
+Based on the HDI plot, it can be seen that the Highest Density Intervals (HDI) for the variables GLS and intrinsic motivation do not include zero, suggesting that GLS has a negative effect and intrinsic motivation has a positive effect on passive procrastination. This is opposite to our initial expectations, which predicted a negative effect for intrinsic motivation. To gain a deeper understanding of the data, we conducted hypothesis tests. For H1 (GLS), the evidence ratio was 0, providing extreme evidence in favor of the hypothesis that self-regulation has a negative effect on passive procrastination. For H2, the evidence ratio was 77.4313725, indicating very strong evidence in favor of the hypothesis that intrinsic motivation has a positive effect on passive procrastination. For H3, although the plot did not show a significant effect, there was anecdotal evidence (ER = 0.4020329) supporting the hypothesis that statistics anxiety has a positive effect on passive procrastination. However, the evidence ratios for H4, H5, H6, and H7, which were hypotheses about the interactions, were all greater than 1, suggesting that the evidence supports H0 (no interaction), consistent with previous research. Therefore, we will not focus on interaction effects in our subsequent analyses.
+
+As we observed a clear interaction among different variables, we visualized the changes in the plot.
+
+```{r, echo=FALSE}
+Self_regulation_plot <- conditional_effects(Dunn_fit1, 
+                    effects = "GSL_mean")
+
+plot(Self_regulation_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(6, 30), breaks = seq(6, 30, 4)) + 
+  labs(x = "mean centre Self-regulation", y = "passive procrastination")
+```
+
+```{r, echo=FALSE}
+Intrinsic_motivation_plot <- conditional_effects(Dunn_fit1, 
+                    effects = "Intrinsic_mean")
+
+plot(Intrinsic_motivation_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(6, 30), breaks = seq(6, 30, 4)) + 
+  labs(x = "mean centre Intrinsic_motivation", y = "passive procrastination")
+```
+
+```{r, echo=FALSE}
+statistics_anxiety_plot <- conditional_effects(Dunn_fit1, 
+                    effects = "STARS_mean")
+
+plot(statistics_anxiety_plot, 
+     plot = FALSE)[[1]] + 
+  theme_classic() + 
+  scale_y_continuous(limits = c(6, 30), breaks = seq(6, 30, 4)) + 
+  labs(x = "mean centre statistics_anxiety", y = "passive procrastination")
+```
+
+However, after examining the plot, we found that although there was anecdotal evidence to support H3, the influence appeared to be nearly flat. 
+
+In addition, we investigated the sensitivity of the model to the removal of interactions and the use of different priors. The table below shows the R-square estimate with and without interactions.
+
+```{r, echo=FALSE}
+knitr::kable(R2_Dunn_table, 
+             digits = 2,
+             row.names = TRUE,
+             col.names = c("R2 Estimate", "Estimated Error", "Lower 95% HDI", "Upper 95% HDI"))
+```
+
+Interestingly, despite our previous finding suggesting that interactions have no effect on passive procrastination, we observed that the model with interactions included had a slightly higher R-square than the model without interactions, although the difference was not substantial. 
+
+We then focused on how the model was sensitive to the prior. The summary order was for the current prior model and the default prior model. By comparing the short posterior summary, we observed that the prior we chose had very little influence on the final result. This suggests that our results are robust to these two choices of prior, and my prior choice is not too restrictive for this question.
+
+```{r, echo=FALSE}
+describe_posterior(Dunn_fit1)
+describe_posterior(Dunn_fit3)
+```
+
+Finally, I have uploaded all the models and data that I used to GitHub (link provided at the beginning). Please feel free to download and re-run them.
+
+
+# Reference
